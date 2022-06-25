@@ -1,10 +1,17 @@
 from django.shortcuts import render, redirect
 from .forms import SightingForm
 from .models import SightForm, TheoryForm
-from .models import Theory, Sighting
+from .models import Theory, Sighting, BlogPost
 
 def index(request):
-	return render(request, 'pages/index.html')
+	posts = BlogPost.objects.all()
+	context = {'posts':posts}
+	return render(request, 'pages/index.html', context)
+
+def bpostdetail(request, bpost_slug):
+	post = BlogPost.objects.get(slug=bpost_slug)
+	context = {'post':post}
+	return render(request, 'pages/bpostdetail.html', context)
 
 def intro(request):
 	return render(request, 'pages/intro.html')
@@ -26,7 +33,7 @@ def sighting(request):
 		form = SightingForm(data=request.POST)
 		if form.is_valid():
 			form.save()
-			return redirect ('pages:index')
+			return redirect ('pages:thanks')
 	else:
 		form = SightingForm()
 	context = {'form':form}

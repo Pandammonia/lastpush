@@ -1,5 +1,6 @@
 from django.db import models
 from django.conf import settings
+from django.urls import reverse
 from django.forms import ModelForm
 from django.contrib.auth import get_user_model
 
@@ -60,3 +61,20 @@ class TheoryForm(ModelForm):
 				  "Name": "Name (optional)",
 				  "email": "Email (optional)",
 		}
+
+class BlogPost(models.Model):
+	title = models.CharField(max_length=100)
+	body = models.TextField()
+	author = models.ForeignKey(get_user_model(), on_delete=models.CASCADE)
+	added = models.DateTimeField(auto_now_add=True)
+	slug = models.SlugField(max_length=100, unique=True)
+
+	def __str__(self):
+		return self.title
+
+	def get_absolute_url(self):
+		return reverse ('pages:bpostdetail', args=[self.slug])
+
+	def save(self, *args, **kwargs):
+		self.slug = self.slug or slugify(self.title)
+		super().save(*args, **kwargs)

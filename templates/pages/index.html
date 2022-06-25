@@ -15,6 +15,12 @@
 <p class= "one">
 I designed this site to serve both as somewhere a newcomer to the subject can get an <a href="{% url 'pages:intro' %}" class="baselinks">Introduction</a> to it and as somewhere that people already acquianted with the subject can get the latest news and express their own opinions. It's nowhere near finished and this is just an early version of it, if there is any interest i'll be adding blog posts, UFO news, and possibly a forum as well. Just testing the waters for now but thank you for looking and i appreciate any feedback via reddit u/Pandammonia or by email at pandammonia@outlook.com.</p>
 
+<h2 class="one">Latest blog posts</h2>
+{% for post in posts %}
+<a href="{{post.get_absolute_url }}">{{post.title}}</a>
+{% empty %}
+none
+{% endfor %}
 {% endblock content %}
 </body>
 </div>

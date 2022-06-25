@@ -4,6 +4,7 @@ from . import views
 app_name = 'pages'
 urlpatterns = [
     path('', views.index, name='index'),
+    path('<slug:bpost_slug>/', views.bpostdetail, name='bpostdetail'),
     path('intro/', views.intro, name='intro'),
     path('intro/cases/', views.introcases, name='introcases'),
     path('intro/theories/', views.introtheories, name='introtheories'),
