@@ -20,7 +20,7 @@ urlpatterns =  [
     path('user_blog_submit', views.userblog, name='userblog'),
     path('thanks/', views.thankyou, name='thanks'),
     path('user_sightings/', views.usersightings, name='usersightings'),
-    path('user_sightings/<slug:st_id>/', views.userpostdetail, name="stdetail"),
+    path('user_sightings/<slug:st_id>/', views.sightdetail, name="stdetail"),
     path('thanks/', views.thankyou, name='thanks'),
     #blog section
 ]
