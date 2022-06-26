@@ -88,38 +88,3 @@ class BlogPost(models.Model):
 
 
 
-class UserBlogPost(models.Model):
-
-	STATUS_CHOICES = (
-    ('draft', 'Draft'),
-    ('published', 'Published'),)
-
-	title = models.CharField(max_length=100)
-	body = models.TextField()
-	username = models.CharField(max_length=100, blank=True, null=True)
-	email = models.CharField(max_length=100, blank=True, null=True)
-	published = models.DateTimeField(default=timezone.now)
-	added = models.DateTimeField(auto_now_add=True)
-	slug = models.SlugField(unique_for_date='published')
-	status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='draft')
-
-	def save(self, *args, **kwargs):
-		self.slug = slugify(self.title)
-		super(UserBlogPost, self).save(*args, **kwargs)
-
-	def get_absolute_url(self):
-		return reverse('pages:userposts', args=[self.published.year,
-												  self.published.month,
-												  self.published.day,
-												  self.slug])
-
-class BlogForm(ModelForm):
-	class Meta:
-		model = UserBlogPost
-		fields = ['title', 'body', 'username', 'email']
-		labels = {"title": "Title",
-				  "body": "Your post:",
-				  "username": "Name (optional)",
-				  "email": "Email (optional)",}
-
-
