@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from .forms import SightingForm
-from .models import Theory, Sighting, TheoryForm, BlogForm, BlogPost, UserBlogPost
+from .models import Theory, Sighting, TheoryForm, BlogForm, BlogPost
 
 
 def index(request):
