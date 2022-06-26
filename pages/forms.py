@@ -1,5 +1,5 @@
 from django import forms
-from .models import Sighting
+from .models import Sighting, BlogPost
 from django.contrib.admin import widgets  
 class SightingForm(forms.ModelForm):
 	def __init__(self, *args, **kwargs):
@@ -11,6 +11,7 @@ class SightingForm(forms.ModelForm):
 	class Meta:
 		model = Sighting
 		fields = ['subj', 'body', 'location', 'time_of', 'name']
+
 
 
 

@@ -22,15 +22,17 @@
         <a href="{% url 'pages:introcases' %}" style="padding: 0 0 0 20px;" class ="baselinks">Cases</a>        
         <a href="{% url 'pages:introtheories' %}" style="padding: 0 0 0 20px;" class="baselinks">Theories</a>
         <a href="{% url 'pages:fermi' %}" style="padding: 0 0 0 20px;" class="baselinks">Fermi</a>
-        <a href="{% url 'pages:brave_new_world' %}" style="padding: 0 0 0 20px;" class="baselinks">Brave New World</a>
-        <a href="{% url 'pages:sighting' %}" style="padding: 0 0 0 20px;" class="baselinks">Submit a sighting</a>
+        <a href="{% url 'pages:brave_new_world' %}" style="padding: 0 0 0 20px;" class="baselinks">Brave New World</a><br>
+        <a href="{% url 'pages:usersightings' %}" style="padding: 0 0 0 0px;"class="baselinks">User submitted sightings</a>
+        <a href="{% url 'pages:sighting' %}" style="padding: 0 0 0 20px;" class="baselinks">Submit a sighting</a><br>
+        <a href="{% url 'pages:usertheories' %}" style="padding: 10 0 0 10px;" class="baselinks">User submitted theories</a>
         <a href="{% url 'pages:theory' %}" style="padding: 0 0 0 20px;" class="baselinks">Submit a theory</a><br>
-        <a href="{% url 'pages:usertheories' %}" style="padding: 0 0 0 20px;" class="baselinks">User submitted theories</a>
-        <a href="{% url 'pages:usersightings' %}" style="padding: 0 0 0 20px;" class="baselinks">User submitted sightings</a>
-
+        <a href="{% url 'blog:index' %}" style="padding: 0 0 0 0px;" class="baselinks">User submitted posts</a>
+        <a href="{% url 'blog:submitarticle' %}" style="padding: 0 0 0 46px;" class="baselinks">Submit an article</a><br>
+        
+        
+        </p>
       </div>
-
     {% block content %}{% endblock content %}
-</p>
     </body>
     </html>

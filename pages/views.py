@@ -1,15 +1,21 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from .forms import SightingForm
-from .models import SightForm, TheoryForm
-from .models import Theory, Sighting, BlogPost
+from .models import Theory, Sighting, TheoryForm, BlogForm, BlogPost, UserBlogPost
+
 
 def index(request):
 	posts = BlogPost.objects.all()
-	context = {'posts':posts}
+	context = {'posts': posts}
 	return render(request, 'pages/index.html', context)
 
-def bpostdetail(request, bpost_slug):
-	post = BlogPost.objects.get(slug=bpost_slug)
+def bpostdetail(request, year, month, day, slug):
+	post = get_object_or_404(BlogPost,
+							 status='published',
+							 published__year=year,
+							 published__month=month,
+							 published__day=day,
+							 slug=slug)
+
 	context = {'post':post}
 	return render(request, 'pages/bpostdetail.html', context)
 
@@ -51,7 +57,7 @@ def theory(request):
 	return render(request, 'pages/theory.html', context)
 
 def usertheories(request):
-	theories = Theory.objects.filter(status='Visible')
+	theories = Theory.objects.order_by('-added')
 	context = {'theories':theories}
 	return render(request, 'pages/usertheories.html', context)
 
@@ -69,6 +75,35 @@ def usersightings(request):
 	return render(request, 'pages/sightings.html', context)
 
 def sightdetail(request, st_id):
-	sighting = Sighting.objects.get(id=st_id)
+	sighting = Sighting.objects.filter(slug=st_id)
 	context = {'sighting':sighting}
 	return render(request, 'pages/sightingdetail.html', context)
+
+def userblog(request):
+	if request.method == 'POST':
+		form = BlogForm(data=request.POST)
+		if form.is_valid():
+			form.save()
+			return redirect ('pages:thanks')
+	else:
+		form = BlogForm()
+		context = {'form':form}
+
+	return render(request, 'pages/userblogsubmission.html', context)
+
+def userposts(request):
+	posts = UserBlogPost.objects.all()
+	context = {'posts':posts}
+	return render(request, 'pages/userblogs.html', context)
+
+
+def userpostdetail(request, year, month, day, slug):
+	post = get_object_or_404(UserBlogPost,
+							 status='published',
+							 published__year=year,
+							 published__month=month,
+							 published__day=day,
+							 slug=slug)
+
+	context = {'post': post}
+	return render(request, 'pages/userpostdetail.html', context)

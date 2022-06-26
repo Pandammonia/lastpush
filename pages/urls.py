@@ -1,10 +1,13 @@
 from django.contrib import admin
 from django.urls import path, include
 from . import views 
+from blog import urls
 app_name = 'pages'
-urlpatterns = [
+urlpatterns =  [
     path('', views.index, name='index'),
-    path('<slug:bpost_slug>/', views.bpostdetail, name='bpostdetail'),
+    path('<int:year>/<int:month>/<int:day>/<slug:slug>/', views.bpostdetail, name="bpostdetail"),
+    path('userblog/', views.userposts, name="userposts"),
+    path('userblog/<int:year>/<int:month>/<int:day>/<slug:slug>/', views.userposts, name="userposts"),
     path('intro/', views.intro, name='intro'),
     path('intro/cases/', views.introcases, name='introcases'),
     path('intro/theories/', views.introtheories, name='introtheories'),
@@ -14,7 +17,10 @@ urlpatterns = [
     path('theory/', views.theory, name='theory'),
     path('user_theories/', views.usertheories, name='usertheories'),
     path('user_theories/<int:th_id>/', views.theorydetail, name='thdetail'),
-    path('user_sightings/', views.usersightings, name='usersightings'),
-    path('user_sightings/<int:st_id>/', views.sightdetail, name="stdetail"),
+    path('user_blog_submit', views.userblog, name='userblog'),
     path('thanks/', views.thankyou, name='thanks'),
+    path('user_sightings/', views.usersightings, name='usersightings'),
+    path('user_sightings/<slug:st_id>/', views.userpostdetail, name="stdetail"),
+    path('thanks/', views.thankyou, name='thanks'),
+    #blog section
 ]

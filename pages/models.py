@@ -3,6 +3,8 @@ from django.conf import settings
 from django.urls import reverse
 from django.forms import ModelForm
 from django.contrib.auth import get_user_model
+from django.utils import timezone
+from django.utils.text import slugify
 
 VISIBILITY = [
 			('Visible', 'Visible'),
@@ -16,9 +18,11 @@ class Sighting(models.Model):
 	added = models.DateTimeField(auto_now_add=True)
 	time_of = models.CharField(max_length=100)
 	name = models.CharField(max_length=80, blank=True, null=True)
+	slug = models.SlugField(unique=True)
 
 	def __str__(self):
 		return self.subj
+ 	
 
 class SightForm(ModelForm):
 	class Meta:
@@ -47,7 +51,7 @@ class Theory(models.Model):
 	added = models.DateTimeField(auto_now_add=True)
 	status = models.CharField(max_length=20,
 							  choices=VISIBILITY,
-							  default='hidden')
+							  default='Visible')
 	email = models.CharField(max_length=100, blank=True, null=True)
 
 	def __str__(self):
@@ -59,22 +63,63 @@ class TheoryForm(ModelForm):
 		fields = ['Title', 'Subject', 'Details', 'Name', 'email',]
 		labels = {"Title": "Title",
 				  "Name": "Name (optional)",
-				  "email": "Email (optional)",
-		}
+				  "email": "Email (optional)",}
 
 class BlogPost(models.Model):
-	title = models.CharField(max_length=100)
-	body = models.TextField()
-	author = models.ForeignKey(get_user_model(), on_delete=models.CASCADE)
-	added = models.DateTimeField(auto_now_add=True)
-	slug = models.SlugField(max_length=100, unique=True)
 
-	def __str__(self):
-		return self.title
+	STATUS_CHOICES = (
+    ('draft', 'Draft'),
+    ('published', 'Published'),)
+
+	title = models.CharField(max_length=100, unique=True)
+	body = models.TextField()
+	username = models.CharField(max_length=100, blank=True, null=True , default="Anonymous")
+	added = models.DateTimeField(auto_now_add=True)
+	email = models.CharField(max_length=100, blank=True, null=True)
+	slug = models.SlugField()
+	published = models.DateTimeField(default=timezone.now)
+	status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='draft')
 
 	def get_absolute_url(self):
-		return reverse ('pages:bpostdetail', args=[self.slug])
+		return reverse('pages:bpostdetail', args=[self.published.year,
+												  self.published.month,
+												  self.published.day,
+												  self.slug])
+
+
+
+class UserBlogPost(models.Model):
+
+	STATUS_CHOICES = (
+    ('draft', 'Draft'),
+    ('published', 'Published'),)
+
+	title = models.CharField(max_length=100)
+	body = models.TextField()
+	username = models.CharField(max_length=100, blank=True, null=True)
+	email = models.CharField(max_length=100, blank=True, null=True)
+	published = models.DateTimeField(default=timezone.now)
+	added = models.DateTimeField(auto_now_add=True)
+	slug = models.SlugField(unique_for_date='published')
+	status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='draft')
 
 	def save(self, *args, **kwargs):
-		self.slug = self.slug or slugify(self.title)
-		super().save(*args, **kwargs)
+		self.slug = slugify(self.title)
+		super(UserBlogPost, self).save(*args, **kwargs)
+
+	def get_absolute_url(self):
+		return reverse('pages:userposts', args=[self.published.year,
+												  self.published.month,
+												  self.published.day,
+												  self.slug])
+
+class BlogForm(ModelForm):
+	class Meta:
+		model = UserBlogPost
+		fields = ['title', 'body', 'username', 'email']
+		labels = {"title": "Title",
+				  "body": "Your post:",
+				  "username": "Name (optional)",
+				  "email": "Email (optional)",}
+
+
